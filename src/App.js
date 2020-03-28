@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
 
-function App() {
+const initialItems = [{ uuid: '1' }, { uuid: '2' }, { uuid: '3' }]
+const updatedItems = [{ uuid: '4' }, { uuid: '1' }, { uuid: '2' }, { uuid: '3' }]
+
+const ListItem = React.memo(({ children }) =>  {
+  return <li>{children}</li>
+})
+
+const ListWithKeys = ({ items }) => (
+  <ul>
+    {items.map(x => {
+      return <ListItem key={x.uuid}>{`With key ${x.uuid}`}</ListItem>
+    })}
+  </ul>
+)
+
+const ListWithoutKeys = ({ items }) => (
+  <ul>
+    {items.map(x => {
+      return <ListItem>{`Without key ${x.uuid}`}</ListItem>
+    })}
+  </ul>
+)
+
+const App = () => {
+  const [items, setItems] = React.useState(initialItems)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <ListWithKeys items={items} />
+      <ListWithoutKeys items={items} />
+      <button onClick={() => {
+        const newItems = items.length === 3 ? updatedItems : initialItems
+        setItems(newItems)
+      }}
+      >
+        Toggle extra item
+      </button>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
